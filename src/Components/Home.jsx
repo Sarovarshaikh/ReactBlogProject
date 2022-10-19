@@ -1,11 +1,30 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
+import axios from "axios";
 import "./Home.css";
-import { useContext } from "react";
-import { store } from "./Data";
+// import { useContext } from "react";
+// import { store } from "./Data";
 import { NavLink } from "react-router-dom";
 
 const Home = () => {
-  const [data] = useContext(store);
+  const [apidatanode, setData] = useState([]);
+  
+  const fetcdataNode = async () => {
+    try {
+      const response = await axios.get("https://blogbackendnode.herokuapp.com/api/api");
+      return response.data;
+    } catch (error) {
+      
+    }
+  };
+
+  useEffect(() => {
+    const fetch = async () => {
+      setData(await fetcdataNode());
+    };
+    fetch();
+  }, [apidatanode]);
+
+  // const [data] = useContext(store);
 
   return (
     <div>
@@ -42,7 +61,7 @@ const Home = () => {
         <h2 className="bold">The Latest</h2>
         <div className="line-highlight"></div>
         <div className="div-1">
-          {data
+          {apidatanode && apidatanode
             .filter((data) => data.category === "Bollywood")
             .map(
               (data, index) =>
@@ -65,7 +84,7 @@ const Home = () => {
       <div id="mid-2s" className="mid-2">
         <h2>Latest Articles</h2>
         <div className="line-highlight line2"></div>
-        {data
+        {apidatanode && apidatanode
           .filter((data) => data.category === "Food")
           .map(
             (data, index) =>
@@ -93,7 +112,7 @@ const Home = () => {
         <aside className="home-aside">
           <h2 id="side-h2">Top Stories</h2>
           <div id="line3"></div>
-          {data
+          {apidatanode && apidatanode
             .filter((data) => data.category === "Fitness")
             .map(
               (data, index) =>

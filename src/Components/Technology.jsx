@@ -1,13 +1,32 @@
-import React from "react";
-import { useContext } from "react";
+import React,{useState,useEffect}from "react";
+import axios from "axios";
+// import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import "./Bollywood.css";
-import { store } from "./Data";
+// import { store } from "./Data";
 import { useLayoutEffect } from "react";
 
 
 const Technology = () => {
-  const [data] = useContext(store);
+  const [apidatanode, setData] = useState([]);
+  
+  const fetcdataNode = async () => {
+    try {
+      const response = await axios.get("https://blogbackendnode.herokuapp.com/api/api");
+      return response.data;
+    } catch (error) {
+      
+    }
+  };
+
+  useEffect(() => {
+    const fetch = async () => {
+      setData(await fetcdataNode());
+    };
+    fetch();
+  }, [apidatanode]);
+
+  // const [data] = useContext(store);
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -18,7 +37,7 @@ const Technology = () => {
       <h2 className="h2-1">Technology</h2>
       <hr className="hr-1" />
 
-      {data
+      {apidatanode && apidatanode
         .filter((data) => data.category === "Technology")
         .map((data, index) => (
           <div key={index} className="bolly-page">
@@ -35,7 +54,7 @@ const Technology = () => {
       <aside>
         <h2 className="h2-2">Top Stories</h2>
         <hr className="hr-2" />
-        {data
+        {apidatanode && apidatanode
           .filter((data) => data.category === "Hollywood")
           .map(
             (data, index) =>
